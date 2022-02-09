@@ -8,43 +8,23 @@
 # - Bitrise CLI guides: http://devcenter.bitrise.io/bitrise-cli/
 
 title: |-
-  Stamp AppIcon with version number
+  Stamp AppIcon with build number and environment name
 summary: |
-  This step will use ImageMagick to stamp the version number to all icons.
+  This step will use ImageMagick to stamp the build number to all icons.
 description: |
-  Stamps version "version(build number)" to the bottom of the icon.
-website: https://github.com/ollitapa/bitrise-step-stamp-appicon-with-version-number
-source_code_url: https://github.com/ollitapa/bitrise-step-stamp-appicon-with-version-number
-support_url: https://github.com/ollitapa/bitrise-step-stamp-appicon-with-version-number/issues
+  Stamps build number to the bottom and environment name to the top of the icon.
+website: https://github.com/simplepractice/bitrise-step-stamp-appicon-with-version-number
+source_code_url: https://github.com/simplepractice/bitrise-step-stamp-appicon-with-version-number
+support_url: https://github.com/simplepractice/bitrise-step-stamp-appicon-with-version-number/issues
 host_os_tags:
   - osx-10.10
   - ubuntu-16.04
 
-# If this step should be available only for certain project types
-# just uncomment this `project_type_tags` section and include all the
-# project types supported by the step. If the step can be used for all
-# project types then you can just remove this section.
-# If no `project_type_tags` specified (or specified as an empty array)
-# that means the step can be used for any project type.
-# You can find more information about project type tags in the Step Development Guideline:
-# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
-#
-# project_type_tags:
-  # - ios
-  # - android
-  # - macos
-  # - xamarin
-  # - react-native
-  # - cordova
-  # - ionic
-  # - flutter
+project_type_tags:
+  - ios
 
-
-# Type tags are used for categorizing steps, for easier step discovery in Step Libraries.
-# You can find more information about type tags in the Step Development Guideline:
-# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
 type_tags:
-  - deploy
+  - utility
 
 is_requires_admin_user: false
 is_always_run: false
@@ -55,14 +35,10 @@ deps:
   brew:
   - name: imagemagick
   - name: ghostscript
-  apt_get:
-  - name: imagemagick
-  - name: ghostscript
-
 
 toolkit:
   go:
-    package_name: github.com/ollitapa/bitrise-step-stamp-appicon-with-version-number
+    package_name: github.com/simplepractice/bitrise-step-stamp-appicon-with-version-number
 
 
 inputs:
@@ -75,12 +51,12 @@ inputs:
       is_expand: true
       is_required: true
       value_options: []
-  - stamp_version: 
+  - stamp_env_name: "DBG"
     opts:
-      title: "Version number or string"
-      summary: Version number or string
+      title: "Environment name"
+      summary: Environment name
       description: |
-        Version number or string for example 0.1 or Dev
+        Environment name to stamp on the icon. Defaults to "DBG"
       is_expand: true
       is_required: true
       value_options: []
@@ -93,21 +69,39 @@ inputs:
       is_expand: true
       is_required: true
       value_options: []
-  - foreground_color: "white"
+  - top_foreground_color: "white"
     opts:
-      title: "Foreground color of the stamp"
-      summary: Foreground color of the stamp
+      title: "Foreground color of the top banner"
+      summary: Foreground color of the top banner
       description: |
-        Foreground color (text color) of the stamp. Defaults to "white"
+        Foreground color (text color) of the top banner. Defaults to "white"
       is_expand: true
       is_required: true
       value_options: []
-  - background_color: "#0008"
+  - top_background_color: "#0008"
     opts:
-      title: "Background color of the stamp"
-      summary: Background color of the stamp
+      title: "Background color of the top banner"
+      summary: Background color of the top banner
       description: |
-        Background color of the stamp. Defaults to translucent black
+        Background color of the top banner. Defaults to translucent black
+      is_expand: true
+      is_required: true
+      value_options: []
+  - bottom_foreground_color: "white"
+    opts:
+      title: "Foreground color of the bottom banner"
+      summary: Foreground color of the bottom banner
+      description: |
+        Foreground color (text color) of the bottom banner. Defaults to "white"
+      is_expand: true
+      is_required: true
+      value_options: []
+  - bottom_background_color: "#0008"
+    opts:
+      title: "Background color of the bottom banner"
+      summary: Background color of the bottom banner
+      description: |
+        Background color of the bottom banner. Defaults to translucent black
       is_expand: true
       is_required: true
       value_options: []

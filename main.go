@@ -13,15 +13,19 @@ import (
 
 func main() {
 	iconPath := os.Getenv("stamp_path_to_icons")
-	version := os.Getenv("stamp_version")
+	envName := os.Getenv("stamp_env_name")
 	buildNumber := os.Getenv("stamp_build_number")
-	fgColor := os.Getenv("foreground_color")
-	bgColor := os.Getenv("background_color")
+	topFgColor := os.Getenv("top_foreground_color")
+	topBgColor := os.Getenv("top_background_color")
+	bottomFgColor := os.Getenv("bottom_foreground_color")
+	bottomBgColor := os.Getenv("bottom_background_color")
 
-	fmt.Println("Version number to stamp:", version)
 	fmt.Println("Build number to stamp:", buildNumber)
-	fmt.Println("Foreground color is:", fgColor)
-	fmt.Println("Background color is:", bgColor)
+	fmt.Println("Environemtn name to stamp:", envName)
+	fmt.Println("Top foreground color is:", topFgColor)
+	fmt.Println("Top background color is:", topBgColor)
+	fmt.Println("Bottom foreground color is:", bottomFgColor)
+	fmt.Println("Bottom background color is:", bottomBgColor)
 
 	fmt.Println("Finding icons from directory:", iconPath)
 
@@ -55,19 +59,25 @@ func main() {
 			os.Exit(1)
 		}
 
-		bannerH := int(math.Floor(float64(height) * 0.3))
+		bannerH := int(math.Floor(float64(height) * 0.25))
 		bannerDims := strconv.Itoa(width) + "x" + strconv.Itoa(bannerH)
 
-		bannerCaption := "- " + version + "(" + buildNumber + ")" + " -"
-
-		imgOutString, error := exec.Command("convert",
-			"-background", bgColor,
-			"-fill", fgColor,
-			"-gravity", "center",
+		imgOutString, error := exec.Command("convert", f,
+			"-background", topBgColor,
+			"-fill", topFgColor,
+			"-gravity", "north",
+			"-weight", "700",
 			"-size", bannerDims,
-			"caption:"+bannerCaption,
-			f, "+swap",
+			"caption:"+envName,
+			"-composite",
+			"(",
+			"-background", bottomBgColor,
+			"-fill", bottomFgColor,
 			"-gravity", "south",
+			"-weight", "700",
+			"-size", bannerDims,
+			"caption:"+buildNumber,
+			")",
 			"-composite", f).CombinedOutput()
 		if error != nil {
 			fmt.Println(string(imgOutString))
